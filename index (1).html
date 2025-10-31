@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>টাকা আয় করুন - বিজ্ঞাপন দেখুন</title>
     <script src='//libtl.com/sdk.js' data-zone='9472189' data-sdk='show_9472189'></script>
+    <script src='//libtl.com/sdk.js' data-zone='10118428' data-sdk='show_10118428'></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
@@ -484,7 +486,6 @@
             <div class="badge">সক্রিয়</div>
         </div>
         
-        <!-- হেডার এর নিচে প্রথম বিজ্ঞাপন -->
         <div class="ad-container">
             <center>
                 <script type="text/javascript">
@@ -500,7 +501,6 @@
             </center>
         </div>
         
-        <!-- হোম পেজ -->
         <div class="page-section active" id="home-page">
             <div class="user-card">
                 <div class="user-avatar" id="user-avatar">U</div>
@@ -541,7 +541,10 @@
             
             <div class="action-buttons">
                 <button class="btn btn-primary" id="watch-ad-btn" onclick="watchAd()">
-                    <i class="fas fa-play"></i> বিজ্ঞাপন দেখুন (২ টাকা)
+                    <i class="fas fa-play"></i> সাধারণ বিজ্ঞাপন দেখুন (২ টাকা)
+                </button>
+                <button class="btn btn-warning" id="watch-rewarded-ad-btn" onclick="watchRewardedAd()">
+                    <i class="fas fa-gift"></i> রিওয়ার্ডেড বিজ্ঞাপন দেখুন (৫ টাকা)
                 </button>
                 <button class="btn btn-success" id="auto-ad-btn" onclick="startAutoAds()">
                     <i class="fas fa-robot"></i> স্বয়ংক্রিয় বিজ্ঞাপন
@@ -554,7 +557,6 @@
                 </button>
             </div>
             
-            <!-- পৃষ্ঠার মাঝখানে দ্বিতীয় বিজ্ঞাপন -->
             <div class="ad-container">
                 <center>
                     <script type="text/javascript">
@@ -584,19 +586,22 @@
             </div>
             
             <div class="rate-info">
-                <p><i class="fas fa-ad"></i> প্রতি বিজ্ঞাপন = ২ টাকা</p>
+                <p><i class="fas fa-ad"></i> প্রতি সাধারণ বিজ্ঞাপন = ২ টাকা</p>
+                <p><i class="fas fa-gift"></i> প্রতি রিওয়ার্ডেড বিজ্ঞাপন = ৫ টাকা</p>
                 <p><i class="fas fa-money-bill-wave"></i> ন্যূনতম উত্তোলন: ২০ টাকা</p>
                 <p><i class="fas fa-gift"></i> রেফারেল বোনাস: ৫ টাকা প্রতি ব্যবহারকারী</p>
             </div>
         </div>
         
-        <!-- আর্ন পেজ -->
         <div class="page-section" id="earn-page">
             <h3 class="section-title"><i class="fas fa-coins"></i> টাকা আয় করার উপায়</h3>
             
             <div class="action-buttons">
                 <button class="btn btn-primary" id="watch-ad-btn-earn" onclick="watchAd()">
-                    <i class="fas fa-play"></i> বিজ্ঞাপন দেখুন (২ টাকা)
+                    <i class="fas fa-play"></i> সাধারণ বিজ্ঞাপন দেখুন (২ টাকা)
+                </button>
+                 <button class="btn btn-warning" id="watch-rewarded-ad-btn-earn" onclick="watchRewardedAd()">
+                    <i class="fas fa-gift"></i> রিওয়ার্ডেড বিজ্ঞাপন দেখুন (৫ টাকা)
                 </button>
                 <button class="btn btn-success" id="auto-ad-btn-earn" onclick="startAutoAds()">
                     <i class="fas fa-robot"></i> স্বয়ংক্রিয় বিজ্ঞাপন
@@ -620,12 +625,12 @@
             </div>
             
             <div class="rate-info">
-                <p><i class="fas fa-ad"></i> প্রতি বিজ্ঞাপন = ২ টাকা</p>
+                <p><i class="fas fa-ad"></i> প্রতি সাধারণ বিজ্ঞাপন = ২ টাকা</p>
+                <p><i class="fas fa-gift"></i> প্রতি রিওয়ার্ডেড বিজ্ঞাপন = ৫ টাকা</p>
                 <p><i class="fas fa-gift"></i> রেফারেল বোনাস: ৫ টাকা প্রতি ব্যবহারকারী</p>
             </div>
         </div>
         
-        <!-- উত্তোলন পেজ -->
         <div class="page-section" id="withdraw-page">
             <h3 class="section-title"><i class="fas fa-wallet"></i> টাকা উত্তোলন</h3>
             
@@ -664,13 +669,18 @@
             </div>
         </div>
         
-        <!-- নোটিশ পেজ -->
         <div class="page-section" id="notice-page">
             <h3 class="section-title"><i class="fas fa-bell"></i> নোটিশ ও আপডেট</h3>
             
             <div class="notification-list">
                 <div class="stat-card">
-                    <h3><i class="fas fa-info-circle"></i> নতুন আপডেট</h3>
+                    <h3><i class="fas fa-info-circle"></i> নতুন আপডেট: রিওয়ার্ডেড বিজ্ঞাপন!</h3>
+                    <p>এখন থেকে 'রিওয়ার্ডেড বিজ্ঞাপন' দেখে অতিরিক্ত ৫ টাকা আয় করতে পারবেন!</p>
+                    <small>আজ</small>
+                </div>
+                
+                <div class="stat-card">
+                    <h3><i class="fas fa-info-circle"></i> স্বয়ংক্রিয় বিজ্ঞাপন সিস্টেম</h3>
                     <p>স্বয়ংক্রিয় বিজ্ঞাপন সিস্টেম চালু হয়েছে। এখন থেকে স্বয়ংক্রিয়ভাবে বিজ্ঞাপন দেখে টাকা আয় করতে পারবেন।</p>
                     <small>২ দিন আগে</small>
                 </div>
@@ -694,7 +704,6 @@
         </div>
     </div>
 
-    <!-- নেভিগেশন বার -->
     <div class="bottom-nav">
         <a href="#" class="nav-item active" onclick="showPage('home-page', this)">
             <i class="fas fa-home"></i>
@@ -721,7 +730,8 @@
 
     <script>
         // Constants
-        const POINTS_PER_AD = 2.00; // প্রতি বিজ্ঞাপনে ২ টাকা
+        const POINTS_PER_AD = 2.00; // প্রতি সাধারণ বিজ্ঞাপনে ২ টাকা
+        const POINTS_PER_REWARDED_AD = 5.00; // প্রতি রিওয়ার্ডেড বিজ্ঞাপনে ৫ টাকা
         const MIN_WITHDRAW_TAKA = 20; // ন্যূনতম উত্তোলন ২০ টাকা
         const REFERRAL_BONUS = 5.00; // রেফারেল বোনাস ৫ টাকা
         
@@ -738,6 +748,7 @@
         let autoAdInterval;
         let isAutoMode = false;
         let isAdLoading = false;
+        let adStatusElement;
 
         // Initialize the app
         function initApp() {
@@ -747,6 +758,7 @@
             // Set user info
             document.getElementById('user-id').textContent = userId;
             document.getElementById('user-avatar').textContent = userId.charAt(0).toUpperCase();
+            adStatusElement = document.getElementById('ad-status'); // Cache ad status element
             
             // Load user data
             loadUserData();
@@ -847,11 +859,11 @@
 
         // Check if Monetag ad is ready
         function checkAdReady() {
-            if (typeof window.show_9472189 !== 'function') {
-                document.getElementById('ad-status').innerHTML = '<i class="fas fa-spinner fa-spin"></i> বিজ্ঞাপন সিস্টেম লোড হচ্ছে...';
+            if (typeof window.show_9472189 !== 'function' || typeof window.show_10118428 !== 'function') {
+                adStatusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> বিজ্ঞাপন সিস্টেম লোড হচ্ছে...';
                 setTimeout(checkAdReady, 1000);
             } else {
-                document.getElementById('ad-status').innerHTML = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত';
+                adStatusElement.innerHTML = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত';
             }
         }
 
@@ -888,52 +900,61 @@
             document.getElementById('earned-money').textContent = (earnedPoints + referralEarnings).toFixed(2);
             document.getElementById('referral-count').textContent = referralCount;
             document.getElementById('referral-earnings').textContent = referralEarnings.toFixed(2);
+            // আর্ন পেজের ডেটাও আপডেট করা
+            document.getElementById('referral-count-earn').textContent = referralCount;
+            document.getElementById('referral-earnings-earn').textContent = referralEarnings.toFixed(2);
+            document.getElementById('total-earned-withdraw').textContent = (earnedPoints + referralEarnings).toFixed(2);
             updateProgress();
         }
 
         // Update progress bar and text
         function updateProgress() {
-            const progressPercent = (earnedPoints / MIN_WITHDRAW_TAKA) * 100;
+            const progressPercent = ((earnedPoints + referralEarnings) / MIN_WITHDRAW_TAKA) * 100;
             
             document.getElementById('progress-fill').style.width = `${Math.min(progressPercent, 100)}%`;
-            document.getElementById('ads-progress').textContent = `${earnedPoints.toFixed(2)}/${MIN_WITHDRAW_TAKA} টাকা`;
+            document.getElementById('ads-progress').textContent = `${(earnedPoints + referralEarnings).toFixed(2)}/${MIN_WITHDRAW_TAKA} টাকা`;
         }
 
-        // Function to watch an ad and earn points
+        // Common function for ad process completion
+        function completeAd(points) {
+            watchedAdsCount++;
+            earnedPoints += points;
+            
+            saveUserData();
+            updateUI();
+            adStatusElement.innerHTML = `<i class="fas fa-check-circle"></i> বিজ্ঞাপন সফলভাবে দেখা হয়েছে! (+${points} টাকা)`;
+            
+            // Show coin animation
+            createCoinAnimation();
+            
+            // Show success notification
+            showNotification(`${points} টাকা যোগ হয়েছে! আপনার ব্যালেন্স: ${(earnedPoints + referralEarnings).toFixed(2)} টাকা`, 'success');
+            
+            // Check if earned enough for withdrawal
+            if (earnedPoints + referralEarnings >= MIN_WITHDRAW_TAKA) {
+                showNotification(`অভিনন্দন! আপনি উত্তোলনের জন্য ${MIN_WITHDRAW_TAKA} টাকা সংগ্রহ করেছেন।`, 'info');
+            }
+        }
+
+        // Function to watch a regular ad and earn points
         function watchAd() {
             if (isAdLoading) return;
             
             if (typeof window.show_9472189 !== 'function') {
-                document.getElementById('ad-status').innerHTML = '<i class="fas fa-exclamation-circle"></i> বিজ্ঞাপন সিস্টেম প্রস্তুত নয়। দয়া করে অপেক্ষা করুন...';
+                adStatusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> সাধারণ বিজ্ঞাপন সিস্টেম প্রস্তুত নয়। দয়া করে অপেক্ষা করুন...';
                 return;
             }
 
             isAdLoading = true;
             document.getElementById('watch-ad-btn').disabled = true;
             document.getElementById('watch-ad-btn-earn').disabled = true;
-            document.getElementById('ad-status').innerHTML = '<i class="fas fa-spinner fa-spin"></i> বিজ্ঞাপন লোড হচ্ছে...';
+            adStatusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> বিজ্ঞাপন লোড হচ্ছে...';
             
             try {
-                // Show the ad
+                // Show the ad (Interstitial from 9472189)
                 window.show_9472189().then(() => {
-                    // Ad watched successfully
-                    watchedAdsCount++;
-                    earnedPoints += POINTS_PER_AD;
-                    
-                    saveUserData();
-                    updateUI();
-                    document.getElementById('ad-status').innerHTML = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন সফলভাবে দেখা হয়েছে!';
-                    
-                    // Show coin animation
-                    createCoinAnimation();
-                    
-                    // Show success notification
-                    showNotification(`২ টাকা যোগ হয়েছে! আপনার ব্যালেন্স: ${(earnedPoints + referralEarnings).toFixed(2)} টাকা`, 'success');
-                    
-                    // Check if earned enough for withdrawal
-                    if (earnedPoints + referralEarnings >= MIN_WITHDRAW_TAKA) {
-                        showNotification(`অভিনন্দন! আপনি উত্তোলনের জন্য ${MIN_WITHDRAW_TAKA} টাকা সংগ্রহ করেছেন।`, 'info');
-                    }
+                    // Ad watched successfully (assuming a close means watched)
+                    completeAd(POINTS_PER_AD);
                     
                     // If in auto mode, continue after delay
                     if (isAutoMode) {
@@ -950,7 +971,7 @@
                     }
                 }).catch(error => {
                     console.error('Error showing ad:', error);
-                    document.getElementById('ad-status').innerHTML = '<i class="fas fa-times-circle"></i> বিজ্ঞাপন দেখানো যায়নি। আবার চেষ্টা করুন।';
+                    adStatusElement.innerHTML = '<i class="fas fa-times-circle"></i> বিজ্ঞাপন দেখানো যায়নি। আবার চেষ্টা করুন।';
                     isAdLoading = false;
                     document.getElementById('watch-ad-btn').disabled = false;
                     document.getElementById('watch-ad-btn-earn').disabled = false;
@@ -960,13 +981,60 @@
                     }
                 });
             } catch (error) {
-                console.error('Error in ad system:', error);
-                document.getElementById('ad-status').innerHTML = '<i class="fas fa-exclamation-triangle"></i> বিজ্ঞাপন সিস্টেমে ত্রুটি। পৃষ্ঠাটি রিফ্রেশ করুন।';
+                console.error('Error in ad system (9472189):', error);
+                adStatusElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> বিজ্ঞাপন সিস্টেমে ত্রুটি। পৃষ্ঠাটি রিফ্রেশ করুন।';
                 isAdLoading = false;
                 document.getElementById('watch-ad-btn').disabled = false;
                 document.getElementById('watch-ad-btn-earn').disabled = false;
             }
         }
+        
+        // **NEW** Function to watch a rewarded ad and earn points
+        function watchRewardedAd() {
+            if (isAdLoading) return;
+            
+            if (typeof window.show_10118428 !== 'function') {
+                adStatusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> রিওয়ার্ডেড বিজ্ঞাপন সিস্টেম প্রস্তুত নয়। দয়া করে অপেক্ষা করুন...';
+                return;
+            }
+            
+            isAdLoading = true;
+            document.getElementById('watch-rewarded-ad-btn').disabled = true;
+            document.getElementById('watch-rewarded-ad-btn-earn').disabled = true;
+            adStatusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> রিওয়ার্ডেড বিজ্ঞাপন লোড হচ্ছে...';
+
+            try {
+                // Show the rewarded ad (Popup from 10118428)
+                window.show_10118428('pop').then(() => {
+                    // User watched ad till the end or closed it in interstitial format
+                    completeAd(POINTS_PER_REWARDED_AD);
+                    adStatusElement.innerHTML = '<i class="fas fa-check-circle"></i> রিওয়ার্ডেড বিজ্ঞাপন সফলভাবে দেখা হয়েছে!';
+                }).catch(error => {
+                    // User got error during playing ad OR closed it prematurely (Monetag's definition)
+                    console.error('Error showing rewarded ad:', error);
+                    adStatusElement.innerHTML = '<i class="fas fa-times-circle"></i> রিওয়ার্ডেড বিজ্ঞাপন দেখানো যায়নি অথবা আপনি সময়মতো বন্ধ করেছেন।';
+                }).finally(() => {
+                    // Re-enable buttons
+                    isAdLoading = false;
+                    document.getElementById('watch-rewarded-ad-btn').disabled = false;
+                    document.getElementById('watch-rewarded-ad-btn-earn').disabled = false;
+                    
+                    // Reset status text if not in auto mode
+                    if (!isAutoMode) {
+                         setTimeout(() => {
+                            if (!isAdLoading) adStatusElement.innerHTML = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত';
+                        }, 3000);
+                    }
+                });
+            } catch (error) {
+                console.error('Error in ad system (10118428):', error);
+                adStatusElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> বিজ্ঞাপন সিস্টেমে ত্রুটি। পৃষ্ঠাটি রিফ্রেশ করুন।';
+                isAdLoading = false;
+                document.getElementById('watch-rewarded-ad-btn').disabled = false;
+                document.getElementById('watch-rewarded-ad-btn-earn').disabled = false;
+            }
+        }
+
 
         // Create coin animation
         function createCoinAnimation() {
@@ -996,7 +1064,9 @@
             document.getElementById('stop-auto-btn-earn').disabled = false;
             document.getElementById('watch-ad-btn').disabled = true;
             document.getElementById('watch-ad-btn-earn').disabled = true;
-            document.getElementById('ad-status').innerHTML = '<i class="fas fa-robot"></i> স্বয়ংক্রিয় বিজ্ঞাপন মোড চালু';
+            document.getElementById('watch-rewarded-ad-btn').disabled = true; // রিওয়ার্ডেড বাটনও বন্ধ
+            document.getElementById('watch-rewarded-ad-btn-earn').disabled = true; // রিওয়ার্ডেড বাটনও বন্ধ
+            adStatusElement.innerHTML = '<i class="fas fa-robot"></i> স্বয়ংক্রিয় বিজ্ঞাপন মোড চালু';
             
             watchAd(); // Start the first ad
         }
@@ -1010,7 +1080,9 @@
             document.getElementById('stop-auto-btn-earn').disabled = true;
             document.getElementById('watch-ad-btn').disabled = false;
             document.getElementById('watch-ad-btn-earn').disabled = false;
-            document.getElementById('ad-status').innerHTML = '<i class="fas fa-check-circle"></i> স্বয়ংক্রিয় বিজ্ঞাপন মোড বন্ধ';
+            document.getElementById('watch-rewarded-ad-btn').disabled = false; // রিওয়ার্ডেড বাটনও চালু
+            document.getElementById('watch-rewarded-ad-btn-earn').disabled = false; // রিওয়ার্ডেড বাটনও চালু
+            adStatusElement.innerHTML = '<i class="fas fa-check-circle"></i> স্বয়ংক্রিয় বিজ্ঞাপন মোড বন্ধ';
         }
 
         // Show withdraw form
