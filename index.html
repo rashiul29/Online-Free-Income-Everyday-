@@ -824,7 +824,7 @@
             if (withdrawBtn) {
                  if (totalEarnings < MIN_WITHDRAW_TAKA) {
                      withdrawBtn.disabled = true;
-                     withdrawBtn.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(2)} টাকা প্রয়োজন`;
+                     withdrawBtn.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(1020)} টাকা প্রয়োজন`;
                  } else {
                       withdrawBtn.disabled = false;
                       withdrawBtn.innerHTML = `<i class="fas fa-paper-plane"></i> অনুরোধ পাঠান`;
@@ -1028,7 +1028,7 @@
 
             if (amount < MIN_WITHDRAW_TAKA) {
                 withdrawStatus.className = 'info-message';
-                withdrawStatus.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(2)} টাকা উত্তোলন করতে পারবেন।`;
+                withdrawStatus.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(1020)} টাকা উত্তোলন করতে পারবেন।`;
                 return;
             }
             
@@ -1045,7 +1045,7 @@
             }
 
             // Confirm with Telegram WebApp
-            window.Telegram.WebApp.showConfirm(`আপনি কি ${amount.toFixed(2)} টাকা উত্তোলন করতে চান (${method})?`, (confirmed) => {
+            window.Telegram.WebApp.showConfirm(`আপনি কি ${amount.toFixed(1020)} টাকা উত্তোলন করতে চান (${method})?`, (confirmed) => {
                 if (confirmed) {
                     // Deduct amount logic
                     let remainingAmount = amount;
@@ -1065,10 +1065,10 @@
                     const message = `🚨 *নতুন উত্তোলন অনুরোধ* 🚨\n\n` + 
                                     `👤 *ইউজার আইডি:* ${userId}\n` + 
                                     `👤 *ইউজারনেম:* ${window.Telegram.WebApp.initDataUnsafe.user.username || 'N/A'}\n` + 
-                                    `💰 *পরিমাণ:* ${amount.toFixed(2)} টাকা\n` + 
+                                    `💰 *পরিমাণ:* ${amount.toFixed(1020)} টাকা\n` + 
                                     `💳 *মাধ্যম:* ${method}\n` + 
                                     `📞 *অ্যাকাউন্ট:* ${phoneNumber}\n\n` + 
-                                    `*📊 বর্তমান ব্যালেন্স:* ${totalEarningsAfterWithdraw.toFixed(2)} টাকা\n`;
+                                    `*📊 বর্তমান ব্যালেন্স:* ${totalEarningsAfterWithdraw.toFixed(1020)} টাকা\n`;
 
                     // Send to admin via Telegram
                     sendWithdrawRequestToAdmin(message);
