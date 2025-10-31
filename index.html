@@ -628,6 +628,21 @@
                             method: document.getElementById('withdraw-method').value,
                             account: document.getElementById('account-number').value
                         }));
+
+                        <script>
+        // Constants
+        
+        const REFERRAL_BONUS = 5.00; // রেফারেল বোনাস ৫ টাকা
+        
+        // Telegram Bot Configuration - এখানে আপনার বটের তথ্য দিন
+        const BOT_TOKEN = "8317418673:AAHEBB3fBzuS5LY6nMZ1xdeW6tiDM8kDPAM"; // আপনার বট টোকেন
+        const ADMIN_CHAT_ID = "8328863213"; // আপনার টেলিগ্রাম চ্যাট আইডি
+        
+        // Variables
+        let watchedAdsCount = 0;
+        let earnedPoints = 0.00;
+        let referralCount = 0;
+        // ... (বাকি কোড অপরিবর্তিত থাকবে)
                         
                         withdrawForm.reset();
                         updateUI();
