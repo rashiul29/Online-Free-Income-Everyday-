@@ -327,8 +327,85 @@
             margin-top: 15px;
         }
         
-        /* ... (অন্যান্য CSS অপরিবর্তিত) ... */
+        /* Notification style */
+        .notification {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            min-width: 250px;
+            text-align: center;
+        }
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .notification i {
+            margin-right: 8px;
+        }
+
+        /* Coin Animation CSS (For visual feedback) */
+        @keyframes coinFall {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(50px, -200px) scale(0.5); opacity: 0; }
+        }
+
+        .coin-animation {
+            position: fixed;
+            font-size: 30px;
+            color: var(--warning-color);
+            z-index: 1000;
+            animation: coinFall 1s ease-out forwards;
+        }
         
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-around;
+            background-color: #1a1a2e; /* Darker background for contrast */
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 5px 0;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .nav-item {
+            flex-grow: 1;
+            text-align: center;
+            padding: 8px 0;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Page Sections */
         .page-section {
             display: none;
             padding: 15px;
@@ -416,10 +493,10 @@
                 <button class="btn btn-danger" id="stop-auto-btn" onclick="stopAutoAds()" disabled>
                     <i class="fas fa-stop"></i> বন্ধ করুন
                 </button>
-                </div>
+            </div>
         </div>
 
-        <div class="page-section" id="earn-page" style="display: none;">
+        <div class="page-section" id="earn-page">
              <h3 class="section-title"><i class="fas fa-money-bill-alt"></i> বিজ্ঞাপন দেখুন</h3>
              <div class="ad-status" id="ad-status-earn">
                 <i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত
@@ -460,7 +537,8 @@
                         <option value="bkash">bKash</option>
                         <option value="nagad">Nagad</option>
                         <option value="rocket">Rocket</option>
-                        <option value="binance">Binance</option> </select>
+                        <option value="binance">Binance</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="withdraw-phone">মোবাইল নম্বর/অ্যাকাউন্ট</label>
@@ -585,9 +663,12 @@
     </div>
     
     <script>
-        // ... (JS variables and constants)
-        const BOT_TOKEN = 'YOUR_BOT_TOKEN'; // আপনার বট টোকেন দিন
-        const ADMIN_CHAT_ID = 'YOUR_ADMIN_CHAT_ID'; // আপনার অ্যাডমিন চ্যাট আইডি দিন
+        // ======================================================================
+        // ======= আপডেট করা হলো: BOT_TOKEN এবং ADMIN_CHAT_ID =================
+        // ======================================================================
+        const BOT_TOKEN = '8317418673:AAHEBB3fBzuS5LY6nMZ1xdeW6tiDM8kDPAM'; // আপনার বট টোকেন
+        const ADMIN_CHAT_ID = '8328863213'; // আপনার অ্যাডমিন চ্যাট আইডি
+        // ======================================================================
 
         let watchedAdsCount = parseInt(localStorage.getItem('watchedAdsCount') || '0');
         let earnedPoints = parseFloat(localStorage.getItem('earnedPoints') || '0');
@@ -602,8 +683,6 @@
         const MIN_WITHDRAW_TAKA = 20.00;
         const REFERRAL_BONUS = 5.00;
 
-        // ... (JS functions)
-        
         // Generate a random user ID if not exists
         function generateUserId() { 
             if (localStorage.getItem('userId')) { 
@@ -617,8 +696,10 @@
         // Generate referral link
         function generateReferralLink() {
             const link = `${window.location.origin}${window.location.pathname}?ref=${userId}`;
-            document.getElementById('referral-link').value = link;
-            document.getElementById('referral-link-ref').value = link;
+            const refLinkInput = document.getElementById('referral-link-ref');
+            if (refLinkInput) {
+                refLinkInput.value = link;
+            }
         }
 
         // Check if there's a referral in URL
@@ -629,10 +710,8 @@
                 if (!localStorage.getItem('referredBy')) { 
                     localStorage.setItem('referredBy', referrerId); 
                     showNotification('আপনি একটি রেফারেল লিঙ্ক ব্যবহার করে যোগদান করেছেন! রেফারার ' + REFERRAL_BONUS + ' টাকা বোনাস পাবেন।', 'success'); 
-                    // In a real app, you would send this to your backend
                     setTimeout(() => { 
                         console.log(`User ${userId} referred by ${referrerId}`);
-                        // In a real app, an API call would give the referrer the bonus after the new user's first successful withdrawal.
                     }, 500);
                 }
             }
@@ -674,7 +753,10 @@
             coin.className = 'coin-animation'; 
             coin.innerHTML = '<i class="fas fa-coins"></i>'; 
             
-            const btnRect = document.getElementById('watch-ad-btn').getBoundingClientRect();
+            const btn = document.getElementById('watch-ad-btn') || document.getElementById('watch-ad-btn-earn');
+            if (!btn) return;
+
+            const btnRect = btn.getBoundingClientRect();
             const x = btnRect.left + btnRect.width / 2;
             const y = btnRect.top + btnRect.height / 2;
             
@@ -712,11 +794,18 @@
                  document.getElementById('profile-user-username').textContent = username;
                  
                  // Handle Profile Picture
-                 const defaultAvatar = document.querySelector('.user-avatar').textContent.trim();
-                 const avatarContent = userData.photo_url ? `<img src="${userData.photo_url}" onerror="this.parentElement.textContent='${defaultAvatar}';">` : defaultAvatar;
+                 // A placeholder is needed as direct Telegram photo_url access often fails due to CORS.
+                 const defaultAvatarInitial = userData.first_name ? userData.first_name[0].toUpperCase() : 'U';
+                 const defaultAvatarContent = `<p>${defaultAvatarInitial}</p>`; // Use a <p> tag or similar for centering initial
 
-                 document.getElementById('home-user-avatar').innerHTML = avatarContent;
-                 document.getElementById('profile-user-avatar').innerHTML = avatarContent;
+                 // Using a fallback mechanism
+                 const avatarElements = [document.getElementById('home-user-avatar'), document.getElementById('profile-user-avatar')];
+                 
+                 avatarElements.forEach(el => {
+                     if(el) {
+                         el.innerHTML = defaultAvatarContent; // Set fallback initial
+                     }
+                 });
 
             }
 
@@ -730,7 +819,18 @@
             
             // Withdraw Page
             document.getElementById('total-earned-withdraw').textContent = totalEarnings.toFixed(2) + ' টাকা';
-            document.getElementById('withdraw-amount').min = MIN_WITHDRAW_TAKA;
+            const withdrawBtn = document.querySelector('#withdraw-page button.btn-primary');
+
+            if (withdrawBtn) {
+                 if (totalEarnings < MIN_WITHDRAW_TAKA) {
+                     withdrawBtn.disabled = true;
+                     withdrawBtn.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(2)} টাকা প্রয়োজন`;
+                 } else {
+                      withdrawBtn.disabled = false;
+                      withdrawBtn.innerHTML = `<i class="fas fa-paper-plane"></i> অনুরোধ পাঠান`;
+                 }
+                 document.getElementById('withdraw-amount').min = MIN_WITHDRAW_TAKA;
+            }
             
             // Profile Page
             document.getElementById('profile-balance').textContent = totalEarnings.toFixed(2) + ' টাকা';
@@ -747,13 +847,6 @@
             
             // Update button states
             checkAdReady();
-            if (totalEarnings < MIN_WITHDRAW_TAKA) {
-                document.querySelector('#withdraw-page button.btn-primary').disabled = true;
-                document.querySelector('#withdraw-page button.btn-primary').textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(2)} টাকা প্রয়োজন`;
-            } else {
-                 document.querySelector('#withdraw-page button.btn-primary').disabled = false;
-                 document.querySelector('#withdraw-page button.btn-primary').innerHTML = `<i class="fas fa-paper-plane"></i> অনুরোধ পাঠান`;
-            }
         }
 
         // Check if the ad system is ready and update status
@@ -761,22 +854,45 @@
              const adStatusElement = document.getElementById('ad-status');
              const adStatusEarnElement = document.getElementById('ad-status-earn');
              
-             if (typeof window.show_10118428 === 'function') {
-                 adStatusElement.innerHTML = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত';
-                 adStatusEarnElement.innerHTML = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত';
-                 document.getElementById('watch-ad-btn').disabled = false;
-                 document.getElementById('watch-ad-btn-earn').disabled = false;
-                 if (!isAutoMode) {
-                     document.getElementById('auto-ad-btn').disabled = false;
-                     document.getElementById('auto-ad-btn-earn').disabled = false;
-                 }
+             // Check if the ad SDK function is loaded
+             const isSDKLoaded = typeof window.show_10118428 === 'function';
+             
+             // Update all related elements
+             const buttons = [
+                 document.getElementById('watch-ad-btn'),
+                 document.getElementById('watch-ad-btn-earn'),
+                 document.getElementById('auto-ad-btn'),
+                 document.getElementById('auto-ad-btn-earn')
+             ];
+             const stopButtons = [
+                 document.getElementById('stop-auto-btn'),
+                 document.getElementById('stop-auto-btn-earn')
+             ];
+
+             if (isSDKLoaded) {
+                 const readyMessage = '<i class="fas fa-check-circle"></i> বিজ্ঞাপন দেখতে প্রস্তুত';
+                 adStatusElement.innerHTML = readyMessage;
+                 adStatusEarnElement.innerHTML = readyMessage;
+                 
+                 buttons.forEach(btn => {
+                     if (btn && !isAutoMode) btn.disabled = false;
+                 });
+
+                 stopButtons.forEach(btn => {
+                     if (btn) btn.disabled = !isAutoMode;
+                 });
+                 
              } else {
-                 adStatusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> বিজ্ঞাপন সিস্টেম লোড হচ্ছে...';
-                 adStatusEarnElement.innerHTML = '<i class="fas fa-exclamation-circle"></i> বিজ্ঞাপন সিস্টেম লোড হচ্ছে...';
-                 document.getElementById('watch-ad-btn').disabled = true;
-                 document.getElementById('watch-ad-btn-earn').disabled = true;
-                 document.getElementById('auto-ad-btn').disabled = true;
-                 document.getElementById('auto-ad-btn-earn').disabled = true;
+                 const loadingMessage = '<i class="fas fa-exclamation-circle"></i> বিজ্ঞাপন সিস্টেম লোড হচ্ছে...';
+                 adStatusElement.innerHTML = loadingMessage;
+                 adStatusEarnElement.innerHTML = loadingMessage;
+                 
+                 buttons.forEach(btn => {
+                     if (btn) btn.disabled = true;
+                 });
+                 stopButtons.forEach(btn => {
+                     if (btn) btn.disabled = true;
+                 });
              }
         }
 
@@ -789,8 +905,12 @@
             }
             
             isAdLoading = true; 
+            
+            // Disable all earning buttons
             document.getElementById('watch-ad-btn').disabled = true;
             document.getElementById('watch-ad-btn-earn').disabled = true;
+            document.getElementById('auto-ad-btn').disabled = true;
+            document.getElementById('auto-ad-btn-earn').disabled = true;
             
             // Update status
             const statusMessage = '<i class="fas fa-spinner fa-spin"></i> বিজ্ঞাপন লোড হচ্ছে...';
@@ -814,7 +934,7 @@
                     showNotification(`${POINTS_PER_AD.toFixed(2)} টাকা যোগ হয়েছে! আপনার ব্যালেন্স: ${(earnedPoints + referralEarnings).toFixed(2)} টাকা`, 'success'); 
                     
                     if (isAutoMode) {
-                        setTimeout(watchAd, 1000); // 1 second delay between auto ads
+                        setTimeout(watchAd, 3000); // 3 second delay between auto ads
                     }
 
                 }).catch(() => { 
@@ -858,17 +978,12 @@
         // Stop auto ads mode
         function stopAutoAds() { 
             isAutoMode = false; 
-            document.getElementById('auto-ad-btn').disabled = false; 
-            document.getElementById('auto-ad-btn-earn').disabled = false; 
-            document.getElementById('stop-auto-btn').disabled = true; 
-            document.getElementById('stop-auto-btn-earn').disabled = true; 
-            document.getElementById('watch-ad-btn').disabled = false; 
-            document.getElementById('watch-ad-btn-earn').disabled = false; 
             
             const statusMessage = '<i class="fas fa-check-circle"></i> স্বয়ংক্রিয় বিজ্ঞাপন মোড বন্ধ';
             document.getElementById('ad-status').innerHTML = statusMessage;
             document.getElementById('ad-status-earn').innerHTML = statusMessage;
             
+            // Re-enable manual/auto buttons
             checkAdReady();
         }
 
@@ -884,8 +999,18 @@
                 item.classList.remove('active'); 
             }); 
             
-            if (element) {
+            // If the element is a navigation item, activate it.
+            if (element && element.classList.contains('nav-item')) {
                 element.classList.add('active');
+            } else {
+                // Find the corresponding nav item for the page
+                 const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+                 navItems.forEach(navItem => {
+                     const onClickAttr = navItem.getAttribute('onclick');
+                     if (onClickAttr && onClickAttr.includes(`'${pageId}'`)) {
+                         navItem.classList.add('active');
+                     }
+                 });
             }
             
             updateUI();
@@ -922,23 +1047,24 @@
             // Confirm with Telegram WebApp
             window.Telegram.WebApp.showConfirm(`আপনি কি ${amount.toFixed(2)} টাকা উত্তোলন করতে চান (${method})?`, (confirmed) => {
                 if (confirmed) {
-                    // Deduct amount
-                    if (amount <= earnedPoints) {
-                        earnedPoints -= amount;
+                    // Deduct amount logic
+                    let remainingAmount = amount;
+                    if (remainingAmount <= earnedPoints) {
+                        earnedPoints -= remainingAmount;
                     } else {
-                        const remaining = amount - earnedPoints;
+                        const referralDeduction = remainingAmount - earnedPoints;
                         earnedPoints = 0;
-                        referralEarnings -= remaining;
+                        referralEarnings -= referralDeduction;
                     }
 
                     saveUserData();
-                    updateUI();
-
+                    
                     const totalEarningsAfterWithdraw = earnedPoints + referralEarnings;
                     
                     // Prepare message for Admin
                     const message = `🚨 *নতুন উত্তোলন অনুরোধ* 🚨\n\n` + 
                                     `👤 *ইউজার আইডি:* ${userId}\n` + 
+                                    `👤 *ইউজারনেম:* ${window.Telegram.WebApp.initDataUnsafe.user.username || 'N/A'}\n` + 
                                     `💰 *পরিমাণ:* ${amount.toFixed(2)} টাকা\n` + 
                                     `💳 *মাধ্যম:* ${method}\n` + 
                                     `📞 *অ্যাকাউন্ট:* ${phoneNumber}\n\n` + 
@@ -947,12 +1073,14 @@
                     // Send to admin via Telegram
                     sendWithdrawRequestToAdmin(message);
 
-                    withdrawStatus.className = 'success-message';
+                    withdrawStatus.className = 'info-message';
                     withdrawStatus.textContent = 'উত্তোলন অনুরোধ সফলভাবে জমা দেওয়া হয়েছে! প্রসেসিং করতে ২৪-৪৮ ঘন্টা সময় লাগতে পারে।';
                     
                     // Clear form after successful submission
                     document.getElementById('withdraw-amount').value = '';
                     document.getElementById('withdraw-phone').value = '';
+
+                    updateUI(); // Update UI after deduction and before message to admin is confirmed
                 }
             });
         }
@@ -961,7 +1089,7 @@
         function sendWithdrawRequestToAdmin(message) { 
             if (BOT_TOKEN === 'YOUR_BOT_TOKEN' || ADMIN_CHAT_ID === 'YOUR_ADMIN_CHAT_ID') {
                 console.error("BOT_TOKEN and ADMIN_CHAT_ID must be configured for withdrawal to work.");
-                showNotification('উত্তোলন অনুরোধ সার্ভারে পাঠাতে ব্যর্থ। BOT_TOKEN/ADMIN_CHAT_ID কনফিগার করুন।', 'error');
+                // Show error only if the user didn't update the tokens (which they just did, so this is mainly a safeguard)
                 return;
             }
             // Telegram API URL তৈরি করুন
@@ -974,25 +1102,29 @@
                         console.log('উত্তোলন অনুরোধ অ্যাডমিনকে পাঠানো হয়েছে');
                     } else {
                         console.error('উত্তোলন অনুরোধ পাঠানো যায়নি:', data);
+                        showNotification('অ্যাডমিনকে মেসেজ পাঠাতে সমস্যা হয়েছে। তবে টাকা আপনার ব্যালেন্স থেকে কাটা হয়েছে।', 'error');
                     }
                 })
-                .catch(error => console.error('মেসেজ পাঠাতে ত্রুটি:', error));
+                .catch(error => {
+                    console.error('মেসেজ পাঠাতে ত্রুটি:', error);
+                    showNotification('নেটওয়ার্ক ত্রুটি! অ্যাডমিনকে মেসেজ পাঠানো যায়নি।', 'error');
+                });
         }
         
         // Copy referral link
         function copyReferralLink() {
             const linkInput = document.getElementById('referral-link-ref');
-            linkInput.select();
-            document.execCommand('copy');
-            showNotification('রেফারেল লিঙ্ক কপি করা হয়েছে!', 'info');
+            if (linkInput) {
+                linkInput.select();
+                linkInput.setSelectionRange(0, 99999); // For mobile devices
+                document.execCommand('copy');
+                showNotification('রেফারেল লিঙ্ক কপি করা হয়েছে!', 'info');
+            }
         }
 
         // Placeholder Log Out function
         function logOut() {
             window.Telegram.WebApp.showAlert('আপনি লগ আউট করেছেন। আবার অ্যাপ খুলুন।');
-            // In a real app, you might clear localStorage or close the WebApp
-            // localStorage.clear(); 
-            // window.Telegram.WebApp.close(); 
         }
 
         // Initialize the app when page loads
@@ -1004,7 +1136,24 @@
             checkReferral();
             generateReferralLink();
             updateUI();
-            checkAdReady();
+            
+            // Check ad status after 1 second to ensure SDK is loaded
+            setTimeout(checkAdReady, 1000); 
+            
+            // Set up event listeners for nav items after DOM is ready
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+                 const onClickAttr = item.getAttribute('onclick');
+                 if (onClickAttr) {
+                    // Extract pageId from the onclick attribute
+                    const match = onClickAttr.match(/showPage\('([^']*)'/);
+                    if (match) {
+                        const pageId = match[1];
+                        // Ensure the item has an ID if needed for cross-page navigation
+                        if (pageId === 'profile-page') item.id = 'profile-nav-item';
+                        if (pageId === 'referral-page') item.id = 'referral-nav-item'; // Added for the button redirect from earn page
+                    }
+                 }
+            });
         }
 
         window.onload = initApp;
