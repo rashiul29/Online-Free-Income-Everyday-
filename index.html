@@ -393,7 +393,7 @@
                     <div class="balance" id="withdraw-balance-display">BDT 0.00</div>
                     <div class="card-label">Current Balance</div>
                     <div style="margin-top: 20px; font-size: 14px; color: var(--light-text-color);">
-                        Minimum withdraw amount is BDT 100.00
+                        Minimum withdraw amount is BDT 1000.00
                     </div>
                 </div>
                 
@@ -492,8 +492,8 @@
             const withdrawForm = document.getElementById('withdraw-form');
 
             const DAILY_ADS_LIMIT = 50;
-            const AD_REWARD = 0.02; // BDT per ad
-            const MIN_WITHDRAW_AMOUNT = 100;
+            const AD_REWARD = 01.20; // BDT per ad
+            const MIN_WITHDRAW_AMOUNT = 1000;
 
             if (!localStorage.getItem('earnings')) {
                 localStorage.setItem('earnings', '0');
