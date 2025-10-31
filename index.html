@@ -551,7 +551,7 @@
             </div>
             
             <div class="rate-info">
-                <p><i class="fas fa-money-bill-wave"></i> ন্যূনতম উত্তোলন: ২০ টাকা</p>
+                <p><i class="fas fa-money-bill-wave"></i> ন্যূনতম উত্তোলন: 500 টাকা</p>
                 <p><i class="fas fa-clock"></i> উত্তোলন প্রসেসিং সময়: ২৪-৪৮ ঘন্টা</p>
             </div>
         </div>
@@ -931,7 +931,7 @@
                     document.getElementById('ad-status-earn').innerHTML = successMessage;
 
                     createCoinAnimation(); 
-                    showNotification(`${POINTS_PER_AD.toFixed(2)} টাকা যোগ হয়েছে! আপনার ব্যালেন্স: ${(earnedPoints + referralEarnings).toFixed(2)} টাকা`, 'success'); 
+                    showNotification(`${POINTS_PER_AD.toFixed(5)} টাকা যোগ হয়েছে! আপনার ব্যালেন্স: ${(earnedPoints + referralEarnings).toFixed(5)} টাকা`, 'success'); 
                     
                     if (isAutoMode) {
                         setTimeout(watchAd, 3000); // 3 second delay between auto ads
@@ -1028,7 +1028,7 @@
 
             if (amount < MIN_WITHDRAW_TAKA) {
                 withdrawStatus.className = 'info-message';
-                withdrawStatus.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(2)} টাকা উত্তোলন করতে পারবেন।`;
+                withdrawStatus.textContent = `ন্যূনতম ${MIN_WITHDRAW_TAKA.toFixed(500)} টাকা উত্তোলন করতে পারবেন।`;
                 return;
             }
             
