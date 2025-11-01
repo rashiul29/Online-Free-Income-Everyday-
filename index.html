@@ -384,6 +384,37 @@
                 </div>
             </section>
             
+            <section id="refer-page" class="page">
+                <div class="card">
+                    <h2 class="card-header">
+                        <span class="material-icons">share</span>
+                        Refer & Earn
+                    </h2>
+                    <div style="text-align: left; margin-bottom: 15px;">
+                        <p style="margin: 0; font-size: 14px;">আপনার বন্ধুদের রেফার করুন এবং প্রতি রেফারে <strong style="color: var(--secondary-color);">BDT 5.00</strong> করে বোনাস পান!</p>
+                        <p style="margin: 5px 0 0; font-size: 12px; color: var(--light-text-color);">তাদেরকে অবশ্যই আপনার লিংক ব্যবহার করে জয়েন করতে হবে।</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="referral-link-display">Your Referral Link:</label>
+                        <input type="text" id="referral-link-display" value="Generating..." readonly style="cursor: text; background-color: #f7f7f7; font-size: 14px; text-align: center; overflow: hidden; white-space: nowrap;">
+                    </div>
+                    
+                    <button class="primary-btn" id="copy-referral-btn">
+                        কপি করুন
+                        <span class="material-icons">content_copy</span>
+                    </button>
+                </div>
+                
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <span class="material-icons">group</span>
+                        Total Successful Referrals
+                    </div>
+                    <div class="dashboard-item-value" id="total-referrals-page">0</div>
+                    <div class="card-label" id="referral-earnings-display">Total Referral Earnings: BDT 0.00</div>
+                </div>
+            </section>
             <section id="withdraw-page" class="page">
                 <div class="card">
                     <h2 class="card-header">
@@ -462,6 +493,10 @@
                 <span class="material-icons">play_circle</span>
                 <span class="nav-item-label">Earn</span>
             </div>
+            <div class="nav-item" data-page="refer-page">
+                <span class="material-icons">group_add</span>
+                <span class="nav-item-label">Refer</span>
+            </div>
             <div class="nav-item" data-page="withdraw-page">
                 <span class="fa-solid fa-credit-card"></span>
                 <span class="nav-item-label">Withdraw</span>
@@ -490,23 +525,45 @@
             const startEarningBtn = document.getElementById('start-earning-btn');
             const withdrawBtn = document.getElementById('withdraw-btn');
             const withdrawForm = document.getElementById('withdraw-form');
+            // NEW: Referral elements
+            const copyReferralBtn = document.getElementById('copy-referral-btn');
+            const referralLinkDisplay = document.getElementById('referral-link-display');
+
 
             const DAILY_ADS_LIMIT = 50;
             const AD_REWARD = 0.02; // BDT per ad
             const MIN_WITHDRAW_AMOUNT = 100;
+            const REFERRAL_REWARD = 5.00; // BDT per successful referral // NEW CONSTANT
 
             if (!localStorage.getItem('earnings')) {
                 localStorage.setItem('earnings', '0');
                 localStorage.setItem('adsWatched', '0');
-                localStorage.setItem('totalReferrals', '0');
+                // Ensure totalReferrals exists
+                if (!localStorage.getItem('totalReferrals')) {
+                     localStorage.setItem('totalReferrals', '0');
+                }
+            }
+            
+            // NEW: Referral Link Generator Function
+            function generateReferralLink(userId) {
+                // *** গুরুত্বপূর্ণ: 'YOUR_BOT_USERNAME' এর জায়গায় আপনার বটের সঠিক ইউজারনেমটি দিন। ***
+                const botUsername = 'YOUR_BOT_USERNAME'; 
+                if (userId) {
+                    return `https://t.me/${botUsername}?start=ref${userId}`;
+                }
+                return `https://t.me/${botUsername}`; // Fallback link
             }
 
             function updateUI() {
                 const earnings = parseFloat(localStorage.getItem('earnings'));
                 const adsWatched = parseInt(localStorage.getItem('adsWatched'));
-                const referrals = parseInt(localStorage.getItem('totalReferrals'));
-
+                const referrals = parseInt(localStorage.getItem('totalReferrals') || '0');
+                // NEW: Referral Earnings calculation
+                const referralEarnings = referrals * REFERRAL_REWARD;
+                
                 const formattedEarnings = earnings.toFixed(2);
+                const formattedReferralEarnings = referralEarnings.toFixed(2);
+
 
                 if(userData) {
                     const fullName = `${userData.first_name || ''} ${userData.last_name || ''}`.trim();
@@ -555,6 +612,15 @@
                 document.getElementById('profile-earnings').textContent = `BDT ${formattedEarnings}`;
                 document.getElementById('profile-ads-watched').textContent = adsWatched;
                 document.getElementById('profile-referrals').textContent = referrals;
+                
+                // NEW: Update Refer Page
+                if (userData && referralLinkDisplay) {
+                    const userId = userData.id;
+                    const link = generateReferralLink(userId);
+                    referralLinkDisplay.value = link;
+                    document.getElementById('total-referrals-page').textContent = referrals;
+                    document.getElementById('referral-earnings-display').textContent = `Total Referral Earnings: BDT ${formattedReferralEarnings}`;
+                }
             }
 
             function showPage(targetPageId) {
@@ -575,6 +641,18 @@
             startEarningBtn.addEventListener('click', () => showPage('earn-page'));
             withdrawBtn.addEventListener('click', () => showPage('withdraw-page'));
             
+            // NEW: Copy Referral Link Listener
+            if (copyReferralBtn) {
+                copyReferralBtn.addEventListener('click', () => {
+                    const link = referralLinkDisplay.value;
+                    navigator.clipboard.writeText(link).then(() => {
+                        tg.showAlert('রেফারেল লিংক কপি করা হয়েছে!');
+                    }).catch(err => {
+                        tg.showAlert('কপি করতে সমস্যা হয়েছে। অনুগ্রহ করে লিংকটি নিজে কপি করুন।');
+                    });
+                });
+            }
+            
             watchAdBtn.addEventListener('click', () => {
                 if (parseInt(localStorage.getItem('adsWatched')) >= DAILY_ADS_LIMIT) {
                     tg.showAlert('আপনার দৈনিক বিজ্ঞাপনের সীমা পৌঁছে গেছে।');
@@ -584,9 +662,6 @@
                 watchAdBtn.disabled = true;
 
                 // --- অ্যাড নেটওয়ার্কের কোড কল করার জায়গা (দ্বিতীয় অংশ) ---
-                // ======================================================================
-                // এখানে আপনার অ্যাড নেটওয়ার্কের দেওয়া ফাংশনটি কল করতে হবে।
-                // নিচের 'show_10118428()' লাইনটি নতুন SDK এর জন্য প্রতিস্থাপিত হয়েছে।
                 // ======================================================================
                 // Rewarded Interstitial Format ব্যবহার করা হয়েছে
                 if (typeof show_10118428 === 'function') {
@@ -604,7 +679,6 @@
                         // বিজ্ঞাপন দেখাতে সমস্যা হলে বা ইউজার বন্ধ করে দিলে
                         tg.showAlert('বিজ্ঞাপনটি দেখাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
                     }).finally(() => {
-                        // বিজ্ঞাপনের প্রক্রিয়া শেষ হলে বা ব্যর্থ হলে বা ইউজার রিওয়ার্ড লজিকের আগে যদি বাটন এনেবল করতে চান
                         watchAdBtn.disabled = false;
                         updateUI();
                     });
