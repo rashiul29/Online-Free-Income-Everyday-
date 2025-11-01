@@ -519,7 +519,7 @@
                     // ======================================================================
                     if (userData.photo_url) {
                         // টেলিগ্রামের CORS পলিসি এড়ানোর জন্য একটি প্রক্সি ব্যবহার করা হয়েছে।
-                        //                         const proxyUrl = 'https://api.allorigins.win/raw?url='; 
+                        const proxyUrl = 'https://api.allorigins.win/raw?url=';
                         const proxiedPhotoUrl = `${proxyUrl}${encodeURIComponent(userData.photo_url)}`;
                         
                         document.getElementById('header-profile-pic').src = proxiedPhotoUrl;
@@ -585,11 +585,13 @@
 
                 // --- অ্যাড নেটওয়ার্কের কোড কল করার জায়গা (দ্বিতীয় অংশ) ---
                 // ======================================================================
-                // এখানে আপনার অ্যাড নেটওয়ার্কের দেওয়া ফাংশনটি কল করা হয়েছে: show_10118428('pop')
+                // এখানে আপনার অ্যাড নেটওয়ার্কের দেওয়া ফাংশনটি কল করতে হবে।
+                // নিচের 'show_10118428()' লাইনটি নতুন SDK এর জন্য প্রতিস্থাপিত হয়েছে।
                 // ======================================================================
+                // Rewarded Interstitial Format ব্যবহার করা হয়েছে
                 if (typeof show_10118428 === 'function') {
-                    show_10118428('pop').then(() => {
-                        // বিজ্ঞাপন সফলভাবে দেখা হলে
+                    show_10118428().then(() => {
+                        // বিজ্ঞাপন সফলভাবে দেখা হলে এই লজিকটি চলবে (ইউজার রিওয়ার্ড ফাংশন)
                         let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
                         let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
                         
@@ -597,11 +599,12 @@
                         localStorage.setItem('adsWatched', currentAdsWatched.toString());
                         
                         tg.showAlert(`বিজ্ঞাপনটি দেখার জন্য আপনি BDT ${AD_REWARD.toFixed(2)} পেয়েছেন!`);
+                        updateUI();
                     }).catch(e => {
-                        // বিজ্ঞাপন দেখাতে সমস্যা হলে
-                        tg.showAlert('বিজ্ঞাপনটি দেখাতে সমস্যা হয়েছে অথবা আপনি মাঝপথে বন্ধ করেছেন। আবার চেষ্টা করুন।');
+                        // বিজ্ঞাপন দেখাতে সমস্যা হলে বা ইউজার বন্ধ করে দিলে
+                        tg.showAlert('বিজ্ঞাপনটি দেখাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
                     }).finally(() => {
-                        // এই অংশটি সবসময় চলবে
+                        // বিজ্ঞাপনের প্রক্রিয়া শেষ হলে বা ব্যর্থ হলে বা ইউজার রিওয়ার্ড লজিকের আগে যদি বাটন এনেবল করতে চান
                         watchAdBtn.disabled = false;
                         updateUI();
                     });
@@ -612,8 +615,8 @@
                     localStorage.setItem('earnings', earnings.toString());
                     localStorage.setItem('adsWatched', currentAdsWatched.toString());
                     alert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`);
-                    watchAdBtn.disabled = false;
                     updateUI();
+                    watchAdBtn.disabled = false;
                 }
             });
 
@@ -632,10 +635,7 @@
                             method: document.getElementById('withdraw-method').value,
                             account: document.getElementById('account-number').value
                         }));
-
                         
-
-                
                         withdrawForm.reset();
                         updateUI();
                         tg.showAlert('আপনার উইথড্র অনুরোধ সফলভাবে জমা হয়েছে।');
