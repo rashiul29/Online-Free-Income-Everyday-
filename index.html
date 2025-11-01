@@ -256,7 +256,7 @@
             display: block;
         }
         
-        @OnlineFreeIncomeEveryday fadeIn {
+        @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
@@ -520,7 +520,7 @@
         </nav>
     </div>
 
-    <script src='//libtl.com/sdk.js' data-zone='9702412' data-sdk='show_9702412'></script>
+    <script src='//libtl.com/sdk.js' data-zone='10118428' data-sdk='show_10118428'></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -703,9 +703,10 @@
 
                 watchAdBtn.disabled = true;
 
-                // এখানে `show_3093242` ফাংশনটি তৃতীয় পক্ষের স্ক্রিপ্ট থেকে আসে
-                if (typeof show_3093242 === 'function') {
-                    show_3093242().then(() => {
+                // এখানে মনিটেক (Monetize.com) এর নতুন ফাংশন `show_10118428('pop')` ব্যবহার করা হয়েছে
+                if (typeof show_10118428 === 'function') {
+                    // 'pop' প্যারামিটার দিয়ে Rewarded Popup দেখানো
+                    show_10118428('pop').then(() => { 
                         let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
                         let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
                         
@@ -725,7 +726,6 @@
                     let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
                     localStorage.setItem('earnings', earnings.toString());
                     localStorage.setItem('adsWatched', currentAdsWatched.toString());
-                    // alert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`); // Mini App এ alert ব্যবহার না করাই ভালো
                     tg.showAlert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`); 
                     updateUI();
                     watchAdBtn.disabled = false;
@@ -769,8 +769,6 @@
                     }
                 });
             });
-            
-            // টেস্টিং ফাংশনটি সরিয়ে দেওয়া হয়েছে। 
             
             updateUI();
         });
