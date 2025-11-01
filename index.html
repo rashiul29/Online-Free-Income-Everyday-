@@ -18,6 +18,7 @@
             --text-color: #333333;
             --light-text-color: #888888;
             --border-color: #e0e0e0;
+            --danger-color: #dc3545; /* Added for warnings */
         }
 
         body {
@@ -316,6 +317,19 @@
             box-sizing: border-box;
             font-size: 16px;
         }
+        
+        /* New Style for Withdrawal Requirement Message */
+        .requirement-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            background-color: #fcebeb; /* Light red background */
+        }
     </style>
 </head>
 <body>
@@ -423,8 +437,8 @@
                     </h2>
                     <div class="balance" id="withdraw-balance-display">BDT 0.00</div>
                     <div class="card-label">Current Balance</div>
-                    <div style="margin-top: 20px; font-size: 14px; color: var(--light-text-color);">
-                        Minimum withdraw amount is BDT 100.00
+                    <div class="requirement-message" id="withdraw-requirement-message">
+                        উত্তোলনের জন্য <strong id="min-balance-req">ন্যূনতম BDT 100.00 ব্যালেন্স</strong> এবং <strong id="min-referral-req">১৫টি সফল রেফারেল</strong> প্রয়োজন।
                     </div>
                 </div>
                 
@@ -480,7 +494,7 @@
                         <span class="profile-label">Total Referrals</span>
                         <span class="profile-value" id="profile-referrals">0</span>
                     </div>
-                </div>
+                    </div>
             </section>
         </main>
 
@@ -525,7 +539,11 @@
             const startEarningBtn = document.getElementById('start-earning-btn');
             const withdrawBtn = document.getElementById('withdraw-btn');
             const withdrawForm = document.getElementById('withdraw-form');
-            // NEW: Referral elements
+            const submitWithdrawBtn = document.getElementById('submit-withdraw-btn'); // NEW: Get the submit button
+            const withdrawRequirementMessage = document.getElementById('withdraw-requirement-message'); // NEW: Get the requirement message element
+            const minBalanceReq = document.getElementById('min-balance-req'); // NEW: Get balance requirement span
+            const minReferralReq = document.getElementById('min-referral-req'); // NEW: Get referral requirement span
+            // Referral elements
             const copyReferralBtn = document.getElementById('copy-referral-btn');
             const referralLinkDisplay = document.getElementById('referral-link-display');
 
@@ -533,21 +551,21 @@
             const DAILY_ADS_LIMIT = 50;
             const AD_REWARD = 0.02; // BDT per ad
             const MIN_WITHDRAW_AMOUNT = 100;
-            const REFERRAL_REWARD = 5.00; // BDT per successful referral // NEW CONSTANT
+            const MIN_REFERRALS_FOR_WITHDRAWAL = 15; // <--- NEW CONSTANT
+            const REFERRAL_REWARD = 5.00; // BDT per successful referral
 
             if (!localStorage.getItem('earnings')) {
                 localStorage.setItem('earnings', '0');
                 localStorage.setItem('adsWatched', '0');
-                // Ensure totalReferrals exists
                 if (!localStorage.getItem('totalReferrals')) {
                      localStorage.setItem('totalReferrals', '0');
                 }
             }
             
-            // NEW: Referral Link Generator Function
+            // Referral Link Generator Function
             function generateReferralLink(userId) {
                 // *** IMPORTANT: YOUR BOT USERNAME HAS BEEN SET HERE. ***
-                const botUsername = 'Onlinefreeincomeeveryday_bot'; // <--- পরিবর্তিত ইউজারনেম
+                const botUsername = 'Onlinefreeincomeeveryday_bot'; 
                 if (userId) {
                     return `https://t.me/${botUsername}?start=ref${userId}`;
                 }
@@ -558,11 +576,14 @@
                 const earnings = parseFloat(localStorage.getItem('earnings'));
                 const adsWatched = parseInt(localStorage.getItem('adsWatched'));
                 const referrals = parseInt(localStorage.getItem('totalReferrals') || '0');
-                // NEW: Referral Earnings calculation
                 const referralEarnings = referrals * REFERRAL_REWARD;
                 
                 const formattedEarnings = earnings.toFixed(2);
                 const formattedReferralEarnings = referralEarnings.toFixed(2);
+                
+                // --- Withdrawal Condition Check ---
+                const canWithdraw = earnings >= MIN_WITHDRAW_AMOUNT && referrals >= MIN_REFERRALS_FOR_WITHDRAWAL;
+                // ----------------------------------
 
 
                 if(userData) {
@@ -571,11 +592,7 @@
                     document.getElementById('profile-user-name').textContent = fullName || 'User';
                     document.getElementById('profile-user-username').textContent = userData.username ? `@${userData.username}` : 'No username';
                     
-                    // ======================================================================
-                    // ====== প্রোফাইল ছবি দেখানোর কোড (CORS সমস্যার সমাধানসহ) ======
-                    // ======================================================================
                     if (userData.photo_url) {
-                        // টেলিগ্রামের CORS পলিসি এড়ানোর জন্য একটি প্রক্সি ব্যবহার করা হয়েছে।
                         const proxyUrl = 'https://api.allorigins.win/raw?url=';
                         const proxiedPhotoUrl = `${proxyUrl}${encodeURIComponent(userData.photo_url)}`;
                         
@@ -604,16 +621,31 @@
 
                 // Update Withdraw Page
                 document.getElementById('withdraw-balance-display').textContent = `BDT ${formattedEarnings}`;
-                document.getElementById('submit-withdraw-btn').disabled = earnings < MIN_WITHDRAW_AMOUNT;
-                if(earnings < MIN_WITHDRAW_AMOUNT) document.getElementById('submit-withdraw-btn').textContent = `ন্যূনতম BDT ${MIN_WITHDRAW_AMOUNT} প্রয়োজন`;
+                submitWithdrawBtn.disabled = !canWithdraw; // Use the new variable
+                
+                // Update Withdrawal Requirement Message (NEW)
+                minBalanceReq.style.color = earnings >= MIN_WITHDRAW_AMOUNT ? 'var(--secondary-color)' : 'var(--danger-color)';
+                minReferralReq.style.color = referrals >= MIN_REFERRALS_FOR_WITHDRAWAL ? 'var(--secondary-color)' : 'var(--danger-color)';
+                
+                if (!canWithdraw) {
+                    if (earnings < MIN_WITHDRAW_AMOUNT && referrals < MIN_REFERRALS_FOR_WITHDRAWAL) {
+                        submitWithdrawBtn.textContent = `BDT ${MIN_WITHDRAW_AMOUNT} এবং ${MIN_REFERRALS_FOR_WITHDRAWAL} রেফারেল প্রয়োজন`;
+                    } else if (earnings < MIN_WITHDRAW_AMOUNT) {
+                        submitWithdrawBtn.textContent = `ন্যূনতম BDT ${MIN_WITHDRAW_AMOUNT} প্রয়োজন`;
+                    } else if (referrals < MIN_REFERRALS_FOR_WITHDRAWAL) {
+                        submitWithdrawBtn.textContent = `${MIN_REFERRALS_FOR_WITHDRAWAL}টি সফল রেফারেল প্রয়োজন`;
+                    }
+                } else {
+                    submitWithdrawBtn.textContent = 'Submit Withdraw Request';
+                }
 
                 // Update Profile Page
                 document.getElementById('profile-balance').textContent = `BDT ${formattedEarnings}`;
                 document.getElementById('profile-earnings').textContent = `BDT ${formattedEarnings}`;
                 document.getElementById('profile-ads-watched').textContent = adsWatched;
-                document.getElementById('profile-referrals').textContent = referrals;
-                
-                // NEW: Update Refer Page (সংশোধিত অংশ)
+                document.getElementById('profile-referrals').textContent = referrals; // Updated Display
+
+                // Update Refer Page
                 if (referralLinkDisplay) {
                     if (userData && userData.id) {
                         const userId = userData.id;
@@ -622,7 +654,6 @@
                         document.getElementById('total-referrals-page').textContent = referrals;
                         document.getElementById('referral-earnings-display').textContent = `Total Referral Earnings: BDT ${formattedReferralEarnings}`;
                     } else {
-                         // যদি userData না পাওয়া যায়
                         referralLinkDisplay.value = "ERROR: Telegram App-এ লোড করুন। ইউজার ডাটা পাওয়া যায়নি।";
                         document.getElementById('total-referrals-page').textContent = 'N/A';
                         document.getElementById('referral-earnings-display').textContent = 'Cannot generate link.';
@@ -648,7 +679,7 @@
             startEarningBtn.addEventListener('click', () => showPage('earn-page'));
             withdrawBtn.addEventListener('click', () => showPage('withdraw-page'));
             
-            // NEW: Copy Referral Link Listener
+            // Copy Referral Link Listener
             if (copyReferralBtn) {
                 copyReferralBtn.addEventListener('click', () => {
                     const link = referralLinkDisplay.value;
@@ -673,10 +704,6 @@
                 watchAdBtn.disabled = true;
 
                 // --- অ্যাড নেটওয়ার্কের কোড কল করার জায়গা (দ্বিতীয় অংশ) ---
-                // ======================================================================
-                // এখানে আপনার অ্যাড নেটওয়ার্কের দেওয়া ফাংশনটি কল করতে হবে।
-                // নিচের 'show_9702412()' লাইনটি একটি উদাহরণ।
-                // ======================================================================
                 if (typeof show_9702412 === 'function') {
                     show_9702412().then(() => {
                         let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
@@ -690,7 +717,7 @@
                         tg.showAlert('বিজ্ঞাপনটি দেখাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
                     }).finally(() => {
                         updateUI();
-                        watchAdBtn.disabled = false; // Add this line to re-enable the button
+                        watchAdBtn.disabled = false; 
                     });
                 } else {
                     // Fallback for testing in browser without Telegram
@@ -707,7 +734,21 @@
             withdrawForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const amount = parseFloat(document.getElementById('withdraw-amount').value);
+                const earnings = parseFloat(localStorage.getItem('earnings'));
+                const referrals = parseInt(localStorage.getItem('totalReferrals') || '0');
+                const canWithdraw = earnings >= MIN_WITHDRAW_AMOUNT && referrals >= MIN_REFERRALS_FOR_WITHDRAWAL;
+
+                if (!canWithdraw) {
+                    tg.showAlert(`উত্তোলনের জন্য আপনার BDT ${MIN_WITHDRAW_AMOUNT} এবং ${MIN_REFERRALS_FOR_WITHDRAWAL}টি সফল রেফারেল প্রয়োজন।`);
+                    return;
+                }
                 
+                if (amount < MIN_WITHDRAW_AMOUNT || amount > earnings) {
+                    tg.showAlert(`পরিমাণটি সঠিক নয়। এটি অবশ্যই ন্যূনতম BDT ${MIN_WITHDRAW_AMOUNT} হতে হবে এবং আপনার ব্যালেন্সের বেশি হতে পারবে না।`);
+                    return;
+                }
+
+
                 tg.showConfirm(`আপনি কি আপনার উইথড্র অনুরোধ জমা দিতে চান?`, (confirmed) => {
                     if (confirmed) {
                         let newEarnings = parseFloat(localStorage.getItem('earnings')) - amount;
@@ -726,6 +767,17 @@
                     }
                 });
             });
+            
+            // --- FOR TESTING ONLY: Increase Referrals for easy testing ---
+            // Uncomment the lines below to add a button for testing referral feature
+            // window.addReferral = function() {
+            //    let referrals = parseInt(localStorage.getItem('totalReferrals') || '0') + 1;
+            //    localStorage.setItem('totalReferrals', referrals.toString());
+            //    updateUI();
+            //    alert(`Referral count increased to: ${referrals}`);
+            // };
+            // console.log("Run window.addReferral() in console to increase referral count.");
+            // --------------------------------------------------------------------
 
             updateUI();
         });
