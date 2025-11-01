@@ -418,10 +418,7 @@
                         কপি করুন
                         <span class="material-icons">content_copy</span>
                     </button>
-                    
-                    </div>
-                
-                <div class="card" style="margin-top: 20px;">
+                </div> <div class="card" style="margin-top: 20px;">
                     <div class="card-header">
                         <span class="material-icons">group</span>
                         Total Successful Referrals
@@ -528,8 +525,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const tg = window.Telegram.WebApp;
-            tg.ready();
-            tg.expand();
+            // এটি নিশ্চিত করে যে টেলিগ্রাম WebApp প্রস্তুত
+            try {
+                tg.ready();
+                tg.expand();
+            } catch (e) {
+                console.error("Telegram WebApp not available. Are you running this inside Telegram?");
+            }
+
             const userData = tg.initDataUnsafe.user;
             const defaultProfilePic40 = 'https://via.placeholder.com/40';
             const defaultProfilePic80 = 'https://via.placeholder.com/80';
@@ -554,7 +557,7 @@
             const MIN_REFERRALS_FOR_WITHDRAWAL = 15;
             const REFERRAL_REWARD = 5.00; // BDT per successful referral
 
-            // Initialize totalReferrals if it doesn't exist
+            // Initialize data in localStorage if it doesn't exist
             if (!localStorage.getItem('earnings')) {
                 localStorage.setItem('earnings', '0');
                 localStorage.setItem('adsWatched', '0');
@@ -590,7 +593,8 @@
                     document.getElementById('profile-user-username').textContent = userData.username ? `@${userData.username}` : 'No username';
                     
                     if (userData.photo_url) {
-                        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                        // ইউজার ফটো লোড করার জন্য প্রক্সি ব্যবহার
+                        const proxyUrl = 'https://api.allorigins.win/raw?url='; 
                         const proxiedPhotoUrl = `${proxyUrl}${encodeURIComponent(userData.photo_url)}`;
                         
                         document.getElementById('header-profile-pic').src = proxiedPhotoUrl;
@@ -668,8 +672,7 @@
                 if (activePage) activePage.classList.add('active');
             }
 
-            // ... (Event listeners for navItems, startEarningBtn, withdrawBtn, copyReferralBtn, watchAdBtn, withdrawForm remain the same) ...
-
+            // Event listeners
             navItems.forEach(item => {
                 item.addEventListener('click', () => showPage(item.getAttribute('data-page')));
             });
@@ -700,6 +703,7 @@
 
                 watchAdBtn.disabled = true;
 
+                // এখানে `show_9702412` ফাংশনটি তৃতীয় পক্ষের স্ক্রিপ্ট থেকে আসে
                 if (typeof show_9702412 === 'function') {
                     show_9702412().then(() => {
                         let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
@@ -716,12 +720,13 @@
                         watchAdBtn.disabled = false; 
                     });
                 } else {
-                    // Fallback for testing in browser without Telegram
+                    // Fallback for testing in browser without Telegram or ad SDK
                     let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
                     let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
                     localStorage.setItem('earnings', earnings.toString());
                     localStorage.setItem('adsWatched', currentAdsWatched.toString());
-                    alert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`);
+                    // alert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`); // Mini App এ alert ব্যবহার না করাই ভালো
+                    tg.showAlert(`(Test Mode) You earned BDT ${AD_REWARD.toFixed(2)}!`); 
                     updateUI();
                     watchAdBtn.disabled = false;
                 }
@@ -745,11 +750,12 @@
                 }
 
 
-                tg.showConfirm(`আপনি কি আপনার উইথড্র অনুরোধ জমা দিতে চান?`, (confirmed) => {
+                tg.showConfirm(`আপনি কি BDT ${amount.toFixed(2)} উইথড্র অনুরোধ জমা দিতে চান?`, (confirmed) => {
                     if (confirmed) {
                         let newEarnings = parseFloat(localStorage.getItem('earnings')) - amount;
                         localStorage.setItem('earnings', newEarnings.toString());
                         
+                        // ব্যাকএন্ড বটের কাছে উইথড্রয়াল অনুরোধ পাঠানো হচ্ছে
                         tg.sendData(JSON.stringify({ 
                             type: 'withdrawal', 
                             amount: amount, 
@@ -764,7 +770,7 @@
                 });
             });
             
-            // টেস্টিং ফাংশনটি সরিয়ে দেওয়া হলো। 
+            // টেস্টিং ফাংশনটি সরিয়ে দেওয়া হয়েছে। 
             
             updateUI();
         });
