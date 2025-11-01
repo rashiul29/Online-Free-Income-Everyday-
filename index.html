@@ -633,20 +633,9 @@
                             account: document.getElementById('account-number').value
                         }));
 
-                        function generateReferralLink() {
-    const currentUrl = window.location.href.split('?')[0];
-    const referralLink = `${currentUrl}?ref=${userId}`;
-    document.getElementById('referral-link').value = referralLink;
-                        }
+                        
 
-                        রেফারেল বোনাস ও পরিসংখ্যান
-রেফারেল বোনাস (Referral Bonus):
-প্রতিটি সফল রেফারেলের জন্য বোনাস: ৫ টাকা (REFERRAL_BONUS = 5.00)
-রেফারেল পরিসংখ্যান (Referral Statistics):
-আমন্ত্রিত বন্ধুর সংখ্যা: 0 (referral-count / referral-count-earn)
-রেফারেল থেকে মোট আয়: 0.00 টাকা (referral-earnings / referral-earnings-earn)
-রেফারেল সংক্রান্ত বার্তা:
-"আপনার রেফারেল লিঙ্ক শেয়ার করুন এবং প্রতিটি বন্ধুর জন্য ৫ টাকা বোনাস পান!"
+                
                         withdrawForm.reset();
                         updateUI();
                         tg.showAlert('আপনার উইথড্র অনুরোধ সফলভাবে জমা হয়েছে।');
