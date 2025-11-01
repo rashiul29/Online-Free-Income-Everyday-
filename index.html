@@ -552,7 +552,7 @@
 
 
             const DAILY_ADS_LIMIT = 50;
-            const AD_REWARD = 02.02; // BDT per ad
+            const AD_REWARD = 2.02; // BDT per ad
             const MIN_WITHDRAW_AMOUNT = 1000;
             const MIN_REFERRALS_FOR_WITHDRAWAL = 15;
             const REFERRAL_REWARD = 5.00; // BDT per successful referral
@@ -703,9 +703,9 @@
 
                 watchAdBtn.disabled = true;
 
-                // এখানে `show_9702412` ফাংশনটি তৃতীয় পক্ষের স্ক্রিপ্ট থেকে আসে
-                if (typeof show_9702412 === 'function') {
-                    show_9702412().then(() => {
+                // এখানে `show_3093242` ফাংশনটি তৃতীয় পক্ষের স্ক্রিপ্ট থেকে আসে
+                if (typeof show_3093242 === 'function') {
+                    show_3093242().then(() => {
                         let earnings = parseFloat(localStorage.getItem('earnings')) + AD_REWARD;
                         let currentAdsWatched = parseInt(localStorage.getItem('adsWatched')) + 1;
                         
