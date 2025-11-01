@@ -546,12 +546,12 @@
             
             // NEW: Referral Link Generator Function
             function generateReferralLink(userId) {
-                // *** গুরুত্বপূর্ণ: '@Onlinefreeincomeeveryday_bot' এর জায়গায় আপনার বটের সঠিক ইউজারনেমটি দিন। ***
-                const botUsername = 'YUOR_BOT_USERNAME'; 
+                // *** IMPORTANT: YOUR BOT USERNAME HAS BEEN SET HERE. ***
+                const botUsername = 'Onlinefreeincomeeveryday_bot'; // <--- পরিবর্তিত ইউজারনেম
                 if (userId) {
-                    return `https://t.me/${USERNAME}?start=ref${userId}`;
+                    return `https://t.me/${botUsername}?start=ref${userId}`;
                 }
-                return `https://t.me/${USERNAME}`; // Fallback link
+                return `https://t.me/${botUsername}`; // Fallback link
             }
 
             function updateUI() {
