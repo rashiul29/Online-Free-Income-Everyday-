@@ -26,8 +26,8 @@
 
 
             const DAILY_ADS_LIMIT = 50;
-            const AD_REWARD = 0.02; // BDT per ad
-            const MIN_WITHDRAW_AMOUNT = 100;
+            const AD_REWARD = 02.02; // BDT per ad
+            const MIN_WITHDRAW_AMOUNT = 1000;
             const MIN_REFERRALS_FOR_WITHDRAWAL = 15;
             const REFERRAL_REWARD = 5.00; // BDT per successful referral
 
@@ -241,16 +241,8 @@
                 });
             });
             
-            // ==========================================================
-            // === টেস্টিং ফাংশন: এটি কনসোল থেকে রেফারেল বাড়াতে সাহায্য করবে ===
-            // ==========================================================
-            window.simulateReferral = function(count = 1) {
-                let currentReferrals = parseInt(localStorage.getItem('totalReferrals') || '0');
-                let newReferrals = currentReferrals + count;
-                localStorage.setItem('totalReferrals', newReferrals.toString());
-                updateUI();
-                alert(`Referral count increased to: ${newReferrals}`);
-            };
+            // টেস্টিং ফাংশনটি সরিয়ে দেওয়া হলো। 
+            // রেফারেল সংখ্যা এখন শুধুমাত্র ব্যাকএন্ড দ্বারা আপডেটেড হবে এবং ফ্রন্টএন্ডে প্রদর্শিত হবে।
 
             updateUI();
         });
