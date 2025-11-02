@@ -163,9 +163,11 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-decoration: none; /* Added for anchor tag styling */
         }
         
-        .primary-btn .material-icons, .secondary-btn .material-icons {
+        .primary-btn .material-icons, .secondary-btn .material-icons,
+        .primary-btn .fa-brands, .secondary-btn .fa-brands { /* Added for Telegram icon */
             font-size: 20px;
         }
 
@@ -362,6 +364,17 @@
                     <button class="secondary-btn" id="withdraw-btn">
                         Withdraw <span class="material-icons">currency_exchange</span>
                     </button>
+                </div>
+                
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="card-header">
+                        <span class="fa-solid fa-paper-plane" style="color: #0088cc;"></span> 
+                        আমাদের টেলিগ্রাম চ্যানেলে জয়েন করুন
+                    </div>
+                    <a href="https://t.me/Onlinefreeincomeeveryday" target="_blank" class="secondary-btn" style="background-color: #0088cc; color: white; border: none; margin-top: 0;">
+                        <i class="fa-brands fa-telegram"></i> 
+                        চ্যানেলে যোগ দিন
+                    </a>
                 </div>
                 <div class="dashboard-grid">
                     <div class="dashboard-item">
