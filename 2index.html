@@ -71,6 +71,12 @@
         .submit-btn:hover {
             background-color: #218838;
         }
+        .note {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -121,10 +127,13 @@
 
     <div class="order-form">
         <h3>অর্ডার ফরম</h3>
-        <form action="#" method="POST">
+        
+        <form action="https://formspree.io/f/আপনার_Formspree_ID" method="POST">
             
+            <input type="hidden" name="_subject" value="RJ Group থেকে নতুন মেম্বারশিপ অর্ডার!">
+
             <label for="product">প্যাকেজ নির্বাচন করুন:</label>
-            <select id="product" name="product" required>
+            <select id="product" name="প্যাকেজ_নির্বাচিত" required>
                 <option value="">--- নির্বাচন করুন ---</option>
                 <option value="Rj Family Chat (2200)">1. Rj Family Chat Lifetime Membership (2200 টাকা)</option>
                 <option value="Rj Premium Group (1000)">2. Rj Premium group Lifetime Membership (1000 টাকা)</option>
@@ -133,18 +142,20 @@
             </select>
 
             <label for="amount">কত টাকা দিয়ে কিনেছেন:</label>
-            <input type="text" id="amount" name="amount" placeholder="যেমন: 2200" required>
+            <input type="text" id="amount" name="পরিশোধের_পরিমাণ" placeholder="যেমন: 2200" required>
 
             <label for="sender_number">যে নাম্বার থেকে টাকা পাঠিয়েছেন:</label>
-            <input type="text" id="sender_number" name="sender_number" placeholder="আপনার মোবাইল নাম্বার" required>
+            <input type="text" id="sender_number" name="টাকা_পাঠানো_নাম্বার" placeholder="আপনার মোবাইল নাম্বার" required>
 
             <label for="trx_id">ট্রানজেকশন আইডি (TrxID):</label>
-            <input type="text" id="trx_id" name="trx_id" placeholder="বিকাশ থেকে পাওয়া TrxID" required>
+            <input type="text" id="trx_id" name="TrxID" placeholder="বিকাশ থেকে পাওয়া TrxID" required>
 
-            <button type="submit" class="submit-btn">গোলাপ সাবমিট অপশন (সাবমিট করুন)</button>
+            <button type="submit" class="submit-btn" name="সাবমিট_বাটন">গোলাপ সাবমিট অপশন (সাবমিট করুন)</button>
 
         </form>
     </div>
+    
+    <p class="note">ফর্মটি সাবমিট করার পর তথ্য আপনার ইমেইলে চলে যাবে।</p>
 
 </body>
 </html>
