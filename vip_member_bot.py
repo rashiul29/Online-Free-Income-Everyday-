@@ -10,15 +10,19 @@ import threading
 # ১. আপনার তথ্য
 # =======================
 
+# 🚨 গুরুত্বপূর্ণ: আপনার আসল টোকেন দিয়ে TEST টোকেন পরিবর্তন করুন।
 BOT_TOKEN = "8520079202:AAF-exR0ei9h1KCmZ6BGi6mFrzifUcJf78M" 
+# 🚨 গুরুত্বপূর্ণ: আপনার পেমেন্ট প্রোভাইডারের (যেমন: Stripe, Razorpay) আসল টোকেন বসান।
 PAYMENT_TOKEN = "1877036958:TEST:20b0a42f4a3f20c1d8ddf2c1fcaf6f2323b87e3e"  
-TARGET_GROUP_ID = -1002541807760 # আপনার গ্রুপের আইডি
+# ✅ আপনার গ্রুপের আইডিটি বসানো হলো
+TARGET_GROUP_ID = -1002541807760 
 
 # ==================================
 # ২. ডেটাবেস ফাংশন
 # ==================================
 
 def init_db():
+    """ডেটাবেস ইনিশিয়ালাইজ এবং টেবিল তৈরি করে।"""
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -31,6 +35,7 @@ def init_db():
     conn.close()
 
 def add_member_to_db(user_id, days=30):
+    """সফল পেমেন্টের পর ডেটাবেসে মেম্বার যোগ করে বা মেয়াদ আপডেট করে।"""
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     expiry_date = (datetime.now() + timedelta(days=days)).strftime('%Y-%m-%d %H:%M:%S')
@@ -45,7 +50,8 @@ def add_member_to_db(user_id, days=30):
 # ==================================
 
 async def checkout(update: Update, context):
-    # দাম ১০০০ টাকা, যা পয়সাতে রূপান্তর করা হলো
+    """/checkout কমান্ডের মাধ্যমে পেমেন্টের ইনভয়েস পাঠায়।"""
+    # দাম ১০০০ টাকা (১ BDT = ১০০ পয়সা/সেন্ট হিসেবে)
     price = LabeledPrice(label="১ মাসের মেম্বারশিপ", amount=1000 * 100) 
     
     await update.message.reply_invoice(
@@ -60,14 +66,16 @@ async def checkout(update: Update, context):
     )
 
 async def pre_checkout_query(update: Update, context):
+    """পেমেন্টের চূড়ান্ত অনুমোদন দেয়।"""
     query = update.pre_checkout_query
     await query.answer(ok=True) 
 
 async def successful_payment(update: Update, context):
+    """সফল পেমেন্টের পর ব্যবহারকারীকে গ্রুপে যোগ করে।"""
     user_id = update.message.successful_payment.invoice_payload
     expiry_date = add_member_to_db(user_id, days=30)
     
-    # গ্রুপে যোগ করার জন্য ইনভাইট লিঙ্ক তৈরি
+    # গ্রুপে যোগ করার জন্য ইনভাইট লিঙ্ক তৈরি (১ ঘণ্টার জন্য বৈধ)
     invite_link = await context.bot.create_chat_invite_link(
         chat_id=TARGET_GROUP_ID, 
         member_limit=1, 
@@ -85,6 +93,7 @@ async def successful_payment(update: Update, context):
 # ==================================
 
 def check_and_remove_expired_members(application: Application):
+    """মেয়াদ উত্তীর্ণ সদস্যদের চেক করে এবং গ্রুপ থেকে রিমুভ করে।"""
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -109,12 +118,14 @@ def check_and_remove_expired_members(application: Application):
             
         except Exception as e:
             # যদি ব্যবহারকারী ইতিমধ্যে গ্রুপে না থাকে, তবে এড়িয়ে যান
+            print(f"Error removing user {user_id}: {e}")
             pass
 
     conn.commit()
     conn.close()
 
 def run_scheduler(application):
+    """রিমুভাল ফাংশনটিকে প্রতিদিন রাত ১২টায় চালানোর জন্য শিডিউল করে।"""
     # প্রতিদিন রাত ১২টায় চেক করবে
     schedule.every().day.at("00:00").do(check_and_remove_expired_members, application)
     while True:
@@ -126,18 +137,20 @@ def run_scheduler(application):
 # ==================================
 
 def main():
+    """বট অ্যাপ্লিকেশন চালু করে এবং হ্যান্ডলার যোগ করে।"""
     init_db() 
     application = Application.builder().token(BOT_TOKEN).build()
 
-    # হ্যান্ডলার যোগ
+    # টেলিগ্রাম হ্যান্ডলার যোগ
     application.add_handler(CommandHandler("checkout", checkout))
     application.add_handler(PreCheckoutQueryHandler(pre_checkout_query))
     application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment))
 
-    # রিমুভাল লজিক একটি আলাদা থ্রেডে চালু করা
+    # রিমুভাল লজিক একটি আলাদা থ্রেডে চালু করা (শিডিউলার)
     threading.Thread(target=run_scheduler, args=(application,)).start()
 
     # বট শুরু
+    print("🤖 VIP Member Bot Started...")
     application.run_polling(poll_interval=3)
 
 if __name__ == '__main__':
